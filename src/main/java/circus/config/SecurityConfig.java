@@ -18,8 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * Определяет:
  * <ul>
  *     <li>правила доступа к ресурсам приложения,</li>
- *     <li>настройку страниц входа и выхода,</li>
- *     <li>подключение JWT-фильтра для токенов авторизации,</li>
+ *     <li>настройку страниц входа и выхода,</li>>
  *     <li>обработку ошибок доступа и аутентификации.</li>
  * </ul>
  * </p>
@@ -27,15 +26,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    /** Кастомная реализация {@link org.springframework.security.core.userdetails.UserDetailsService} для загрузки пользователей. */
+    /**
+     * Кастомная реализация {@link org.springframework.security.core.userdetails.UserDetailsService} для загрузки пользователей.
+     */
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    /** Компонент, обрабатывающий ошибки при отсутствии аутентификации. */
+    /**
+     * Компонент, обрабатывающий ошибки при отсутствии аутентификации.
+     */
     @Autowired
     private CustomAuthenticationEntryPoint authEntryPoint;
 
-    /** Компонент, обрабатывающий ошибки при отказе в доступе (403 Forbidden). */
+    /**
+     * Компонент, обрабатывающий ошибки при отказе в доступе (403 Forbidden).
+     */
     @Autowired
     private CustomAccessDeniedHandler accessDeniedHandler;
 
@@ -45,10 +50,8 @@ public class SecurityConfig {
      * Настройка включает:
      * <ul>
      *     <li>разрешённые маршруты для регистрации и входа;</li>
-     *     <li>ограничения доступа по ролям к REST-эндпоинтам;</li>
      *     <li>обработку ошибок безопасности;</li>
      *     <li>настройку форм логина и логаута;</li>
-     *     <li>подключение JWT-фильтра до стандартного фильтра аутентификации.</li>
      * </ul>
      * </p>
      *
@@ -65,7 +68,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // Страницы логина/регистрации доступны всем
-                        .requestMatchers("/login", "/register", "/api/auth/**").permitAll()
+                        .requestMatchers("/login", "/register", "/api/auth/**", "/tickets/save", "/pattern.png", "/tent.png").permitAll()
 
                         // Страница управления пользователями – только SUPER_ADMIN
                         .requestMatchers("/users/**").hasRole("SUPER_ADMIN")
@@ -73,8 +76,8 @@ public class SecurityConfig {
                         // Все таблицы, кроме performances, доступны всем ролям, КРОМЕ VISITOR.
                         // Предположим, что HTML для этих таблиц:
                         // /employees, /animals, /students, /tickets и т.п.
-                        .requestMatchers( "/animals/**", "/tickets/**", "/humanActs/**", "/animalActs/**")
-                        .hasAnyRole( "EMPLOYEE", "BOSS", "SUPER_ADMIN")
+                        .requestMatchers("/animals/**", "/tickets/**", "/humanActs/**", "/animalActs/**")
+                        .hasAnyRole("EMPLOYEE", "BOSS", "SUPER_ADMIN")
 
                         // Страница выступлений (performances) – доступна всем аутентифицированным,
                         // включая VISITOR, если такая роль существует

@@ -3,160 +3,189 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Tickets</title>
-
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Билеты</title>
+    <link rel="icon" type="image/png" href="/favicon_tent.png">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
 </head>
 
 <body class="container mt-4">
 
-<h2 class="mb-4">Tickets List</h2>
+<h2 class="mb-4" style="text-align: center">Билеты</h2>
+
+<div class="mb-4 d-flex gap-2 flex-wrap">
+
+    <a href="/performances" class="btn btn-secondary">Афиша</a>
+
+    <!-- Видны для EMPLOYEE, BOSS, SUPER_ADMIN -->
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/humanActs" class="btn btn-secondary">Номера</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/animalActs" class="btn btn-secondary">Номера с животными</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/animals" class="btn btn-secondary">Животные</a>
+
+    <!-- Видны только для BOSS и SUPER_ADMIN -->
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')"
+       href="/employees" class="btn btn-secondary">Сотрудники</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')"
+       href="/tickets" class="btn btn-primary">Билеты</a>
+
+    <a sec:authorize="hasRole('SUPER_ADMIN')"
+       class="btn btn-secondary" href="/users">User Control</a>
+</div>
 
 <div th:if="${message}" class="alert alert-info text-center" th:text="${message}"></div>
 
 <table class="table table-bordered table-striped align-middle">
-  <thead class="table-dark">
-  <tr>
-    <th sec:authorize="hasRole('SUPER_ADMIN')">Id</th>
-    <th>Performance</th>
-    <th>Customer name</th>
-    <th>Viewers count</th>
-    <th>Total price</th>
-    <th sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')" style="width:25%">Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="ticketItem : ${tickets}">
+    <thead class="table-dark">
+    <tr>
+        <th sec:authorize="hasRole('SUPER_ADMIN')">Id</th>
+        <th>Название представления</th>
+        <th>ФИО покупателя</th>
+        <th>Кол-во зрителей</th>
+        <th>Суммарная цена</th>
+        <th sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')" style="width:25%">Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticketItem : ${tickets}">
 
-    <!-- Режим редактирования выбранной строки -->
-    <th:block th:if="${ticketItem.id == editingId}">
-      <td sec:authorize="hasRole('SUPER_ADMIN')" th:text="${ticketItem.id}">1</td>
+        <!-- Режим редактирования выбранной строки -->
+        <th:block th:if="${ticketItem.id == editingId}">
+            <td sec:authorize="hasRole('SUPER_ADMIN')" th:text="${ticketItem.id}">1</td>
 
-      <td colspan="4">
-        <form th:action="@{/tickets/save}" th:object="${ticket}"
-              method="post" class="row g-2 align-items-center">
-          <input type="hidden" th:field="*{id}"/>
+            <td colspan="4">
+                <form th:action="@{/tickets/save}" th:object="${ticket}"
+                      method="post" class="row g-2 align-items-center">
+                    <input type="hidden" th:field="*{id}"/>
 
-          <!-- выбор выступления по id -->
-          <div class="col-md-3">
-            <label class="form-label mb-0 small">Performance</label>
-            <select class="form-select form-select-sm"
-                    th:field="*{performance}" required>
-              <option th:each="perf : ${performances}"
-                      th:value="${perf.id}"
-                      th:text="${perf.name}">Performance</option>
-            </select>
-          </div>
+                    <!-- выбор выступления по id -->
+                    <div class="col-md-3">
+                        <label class="form-label mb-0 small">Название представления</label>
+                        <select class="form-select form-select-sm"
+                                th:field="*{performance}" required>
+                            <option th:each="perf : ${performances}"
+                                    th:value="${perf.id}"
+                                    th:text="${perf.name}">Название представления
+                            </option>
+                        </select>
+                    </div>
 
-          <div class="col-md-3">
-            <input type="text" class="form-control"
-                   th:field="*{customerName}" placeholder="Customer name" required/>
-          </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control"
+                               th:field="*{customerName}" placeholder="ФИО покупателя" required/>
+                    </div>
 
-          <div class="col-md-2">
-            <input type="number" min="1" class="form-control"
-                   th:field="*{viewersCount}" placeholder="Viewers" required/>
-          </div>
+                    <div class="col-md-2">
+                        <input type="number" min="1" class="form-control"
+                               th:field="*{viewersCount}" placeholder="Viewers" required/>
+                    </div>
 
-          <div class="col-md-2">
-            <input type="number" min="0" class="form-control"
-                   th:field="*{totalPrice}" placeholder="Total price" required/>
-          </div>
+                    <div class="col-md-2">
+                        <input type="number" min="0" class="form-control"
+                               th:field="*{totalPrice}" placeholder="Суммарная цена" required/>
+                    </div>
 
-          <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-success btn-sm">Save</button>
-            <a th:href="@{/tickets}" class="btn btn-secondary btn-sm">Cancel</a>
-          </div>
-        </form>
-      </td>
-    </th:block>
+                    <div class="col-md-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
+                        <a th:href="@{/tickets}" class="btn btn-secondary btn-sm">Отмена</a>
+                    </div>
+                </form>
+            </td>
+        </th:block>
 
-    <!-- Обычный режим просмотра -->
-    <th:block th:if="${editingId == null or ticketItem.id != editingId}">
-      <td sec:authorize="hasRole('SUPER_ADMIN')" th:text="${ticketItem.id}">1</td>
-      <td th:text="${ticketItem.performance.name}">Evening Show</td>
-      <td th:text="${ticketItem.customerName}">John Smith</td>
-      <td th:text="${ticketItem.viewersCount}">3</td>
-      <td th:text="${ticketItem.totalPrice}">4500</td>
+        <!-- Обычный режим просмотра -->
+        <th:block th:if="${editingId == null or ticketItem.id != editingId}">
+            <td sec:authorize="hasRole('SUPER_ADMIN')" th:text="${ticketItem.id}">1</td>
+            <td th:text="${ticketItem.performance.name}">Evening Show</td>
+            <td th:text="${ticketItem.customerName}">John Smith</td>
+            <td th:text="${ticketItem.viewersCount}">3</td>
+            <td th:text="${ticketItem.totalPrice}">4500</td>
 
-      <td sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')">
-        <a class="btn btn-warning btn-sm"
-           th:href="@{/tickets/edit/{id}(id=${ticketItem.id})}">Edit</a>
-        <a class="btn btn-danger btn-sm"
-           th:href="@{/tickets/delete/{id}(id=${ticketItem.id})}"
-           onclick="return confirm('Are you sure?')">Delete</a>
-      </td>
-    </th:block>
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')">
+                <a class="btn btn-warning btn-sm"
+                   th:href="@{/tickets/edit/{id}(id=${ticketItem.id})}">Изменить</a>
+                <a class="btn btn-danger btn-sm"
+                   th:href="@{/tickets/delete/{id}(id=${ticketItem.id})}"
+                   onclick="return confirm('Are you sure?')">Удалить</a>
+            </td>
+        </th:block>
 
-  </tr>
-  </tbody>
+    </tr>
+    </tbody>
 </table>
 
 <!-- Кнопка и модал для добавления нового Ticket -->
 <button sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')"
         type="button" class="btn btn-primary mb-3"
         data-bs-toggle="modal" data-bs-target="#ticketModal">
-  Add New Ticket
+    Добавить билет
 </button>
 
 <div class="modal fade" id="ticketModal" tabindex="-1"
      aria-labelledby="ticketModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form th:action="@{/tickets/save}" th:object="${ticket}" method="post">
-        <div class="modal-header">
-          <h5 class="modal-title" id="ticketModalLabel">Add Ticket</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/tickets/save}" th:object="${ticket}" method="post" id="ticketForm">
+                <input type="hidden" th:field="*{id}" id="ticketId"/>
+                <input type="hidden" name="returnTo" value="tickets"/>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ticketModalLabel">Добавить билет</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" th:field="*{id}"/>
+
+                    <div class="mb-3">
+                        <label class="form-label">Название представления</label>
+                        <select class="form-select" th:field="*{performance}" required>
+                            <option th:each="perf : ${performances}"
+                                    th:value="${perf.id}"
+                                    th:text="${perf.name}">Название представления
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">ФИО покупателя</label>
+                        <input type="text" class="form-control" th:field="*{customerName}" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Кол-во зрителей</label>
+                        <input type="number" min="1" class="form-control" th:field="*{viewersCount}" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Суммарная цена</label>
+                        <input type="number" min="0" class="form-control" th:field="*{totalPrice}" required/>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Отмена
+                    </button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-body">
-          <input type="hidden" th:field="*{id}"/>
-
-          <div class="mb-3">
-            <label class="form-label">Performance</label>
-            <select class="form-select" th:field="*{performance}" required>
-              <option th:each="perf : ${performances}"
-                      th:value="${perf.id}"
-                      th:text="${perf.name}">Performance</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Customer name</label>
-            <input type="text" class="form-control" th:field="*{customerName}" required/>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Viewers count</label>
-            <input type="number" min="1" class="form-control" th:field="*{viewersCount}" required/>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Total price</label>
-            <input type="number" min="0" class="form-control" th:field="*{totalPrice}" required/>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary"
-                  data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
-<div class="mt-4 d-flex justify-content-between">
-  <a href="/performances" class="btn btn-secondary">Back to Performances</a>
-  <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+<div class="mt-4 d-flex justify-content-end">
+    <a href="/logout" class="btn btn-secondary">Выйти из аккаунта</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-
 </body>
 </html>

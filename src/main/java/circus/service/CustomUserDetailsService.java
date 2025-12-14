@@ -22,7 +22,9 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    /** Репозиторий пользователей, используемый для поиска по email. */
+    /**
+     * Репозиторий пользователей, используемый для поиска по email.
+     */
     @Autowired
     private UserRepository userRepository;
 
@@ -34,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * содержащий email, пароль и набор полномочий.
      * </p>
      *
-     * @param username имя пользователя или адрес электронной почты
+     * @param username адрес электронной почты пользователя
      * @return объект {@link UserDetails}, необходимый для аутентификации
      * @throws UsernameNotFoundException если пользователь с данным именем не найден
      */

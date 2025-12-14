@@ -3,89 +3,116 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Animal Acts</title>
-
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Сотрудники</title>
+    <link rel="icon" type="image/png" href="/favicon_man.png">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-
+<link rel="stylesheet" href="/css/custom.css">
 <body class="container mt-4">
 
-<h2 class="mb-4">Employee List</h2>
+<h2 class="mb-4" style="text-align: center">Сотрудники</h2>
+
+<div class="mb-4 d-flex gap-2 flex-wrap">
+
+    <a href="/performances" class="btn btn-secondary">Афиша</a>
+
+    <!-- Видны для EMPLOYEE, BOSS, SUPER_ADMIN -->
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/humanActs" class="btn btn-secondary">Номера</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/animalActs" class="btn btn-secondary">Номера с животными</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/animals" class="btn btn-secondary">Животные</a>
+
+    <!-- Видны только для BOSS и SUPER_ADMIN -->
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS','EMPLOYEE')"
+       href="/employees" class="btn btn-primary">Сотрудники</a>
+
+    <a sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')"
+       href="/tickets" class="btn btn-secondary">Билеты</a>
+
+    <a sec:authorize="hasRole('SUPER_ADMIN')"
+       class="btn btn-secondary" href="/users">User Control</a>
+</div>
 
 <div th:if="${message}" class="alert alert-info text-center" th:text="${message}"></div>
 
 <table class="table table-bordered table-striped align-middle">
     <thead class="table-dark">
     <tr>
-      <th sec:authorize="hasRole('SUPER_ADMIN')">Id</th>
-      <th>Full name</th>
-      <th>Job title</th>
-      <th>Telephone</th>
-      <th>Wages</th>
-      <th sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')" style="width:25%">Actions</th>
+        <th sec:authorize="hasRole('SUPER_ADMIN')">Id</th>
+        <th>ФИО</th>
+        <th>Должность</th>
+        <th>Телефон</th>
+        <th>Зарплата</th>
+        <th sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')" style="width:25%">Действия</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="employee : ${employees}">
 
-      <!-- Режим редактирования выбранной строки -->
-      <th:block th:if="${employee.id == editingId}">
-        <td sec:authorize="hasRole('SUPER_ADMIN')"
-            th:text="${employee.id}">1</td>
+        <!-- Режим редактирования выбранной строки -->
+        <th:block th:if="${employee.id == editingId}">
+            <td sec:authorize="hasRole('SUPER_ADMIN')"
+                th:text="${employee.id}">1
+            </td>
 
-        <td colspan="4">
-          <form th:action="@{/employees/save}" th:object="${employee}"
-                method="post" class="row g-2 align-items-center">
-            <input type="hidden" th:field="*{id}"/>
+            <td colspan="4">
+                <form th:action="@{/employees/save}" th:object="${employee}"
+                      method="post" class="row g-2 align-items-center">
+                    <input type="hidden" th:field="*{id}"/>
 
-            <div class="col-md-3">
-              <input type="text" class="form-control"
-                     th:field="*{fullName}" placeholder="Full name" required/>
-            </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control"
+                               th:field="*{fullName}" placeholder="Full name" required/>
+                    </div>
 
-            <div class="col-md-3">
-              <input type="text" class="form-control"
-                     th:field="*{jobTitle}" placeholder="Job title" required/>
-            </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control"
+                               th:field="*{jobTitle}" placeholder="Job title" required/>
+                    </div>
 
-            <div class="col-md-3">
-              <input type="text" class="form-control"
-                     th:field="*{telephoneNumber}" placeholder="Telephone" required/>
-            </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control"
+                               th:field="*{telephoneNumber}" placeholder="Telephone" required/>
+                    </div>
 
-            <div class="col-md-2">
-              <input type="number" class="form-control"
-                     th:field="*{wages}" placeholder="Wages" min="0" required/>
-            </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control"
+                               th:field="*{wages}" placeholder="Wages" min="0" required/>
+                    </div>
 
-            <div class="col-md-1 d-flex gap-2">
-              <button type="submit" class="btn btn-success btn-sm">Save</button>
-              <a th:href="@{/employees}" class="btn btn-secondary btn-sm">Cancel</a>
-            </div>
-          </form>
-        </td>
-      </th:block>
+                    <div class="col-md-1 d-flex gap-2">
+                        <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
+                        <a th:href="@{/employees}" class="btn btn-secondary btn-sm">Отмена</a>
+                    </div>
+                </form>
+            </td>
+        </th:block>
 
-      <!-- Обычный режим просмотра -->
-      <th:block th:if="${editingId == null or employee.id != editingId}">
-        <td sec:authorize="hasRole('SUPER_ADMIN')"
-            th:text="${employee.id}">1</td>
+        <!-- Обычный режим просмотра -->
+        <th:block th:if="${editingId == null or employee.id != editingId}">
+            <td sec:authorize="hasRole('SUPER_ADMIN')"
+                th:text="${employee.id}">1
+            </td>
 
-        <td th:text="${employee.fullName}">Full Name</td>
-        <td th:text="${employee.jobTitle}">Job Title</td>
-        <td th:text="${employee.telephoneNumber}">+7...</td>
-        <td th:text="${employee.wages}">50000</td>
+            <td th:text="${employee.fullName}">ФИО</td>
+            <td th:text="${employee.jobTitle}">Должность</td>
+            <td th:text="${employee.telephoneNumber}">+7...</td>
+            <td th:text="${employee.wages}">50000</td>
 
-        <td sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')">
-          <a class="btn btn-warning btn-sm"
-             th:href="@{/employees/edit/{id}(id=${employee.id})}">Edit</a>
-          <a class="btn btn-danger btn-sm"
-             th:href="@{/employees/delete/{id}(id=${employee.id})}"
-             onclick="return confirm('Are you sure?')">Delete</a>
-        </td>
-      </th:block>
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')">
+                <a class="btn btn-warning btn-sm"
+                   th:href="@{/employees/edit/{id}(id=${employee.id})}">Изменить</a>
+                <a class="btn btn-danger btn-sm"
+                   th:href="@{/employees/delete/{id}(id=${employee.id})}"
+                   onclick="return confirm('Are you sure?')">Удалить</a>
+            </td>
+        </th:block>
 
     </tr>
     </tbody>
@@ -96,58 +123,58 @@
         sec:authorize="hasAnyRole('SUPER_ADMIN','BOSS')"
         type="button" class="btn btn-primary mb-3"
         data-bs-toggle="modal" data-bs-target="#employeeModal">
-  Add New Employee
+    Добавить сотрудника
 </button>
 
 <div class="modal fade" id="employeeModal" tabindex="-1"
      aria-labelledby="employeeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form th:action="@{/employees/save}" th:object="${employee}" method="post">
-        <div class="modal-header">
-          <h5 class="modal-title" id="employeeModalLabel">Add Employee</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/employees/save}" th:object="${employee}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalLabel">Добавить сотрудника</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" th:field="*{id}"/>
+
+                    <div class="mb-3">
+                        <label class="form-label">ФИО</label>
+                        <input type="text" class="form-control" th:field="*{fullName}" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Должность</label>
+                        <input type="text" class="form-control" th:field="*{jobTitle}" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" class="form-control" th:field="*{telephoneNumber}" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Зарплата</label>
+                        <input type="number" class="form-control"
+                               th:field="*{wages}" min="0" required/>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Отмена
+                    </button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-body">
-          <input type="hidden" th:field="*{id}"/>
-
-          <div class="mb-3">
-            <label class="form-label">Full name</label>
-            <input type="text" class="form-control" th:field="*{fullName}" required/>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Job title</label>
-            <input type="text" class="form-control" th:field="*{jobTitle}" required/>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Telephone</label>
-            <input type="text" class="form-control" th:field="*{telephoneNumber}" required/>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Wages</label>
-            <input type="number" class="form-control"
-                   th:field="*{wages}" min="0" required/>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary"
-                  data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
-<div class="mt-4 d-flex justify-content-between">
-  <a href="/performances" class="btn btn-secondary">Back to Performances</a>
-  <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+<div class="mt-4 d-flex justify-content-end">
+    <a href="/logout" class="btn btn-secondary">Выйти из аккаунта</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

@@ -30,7 +30,9 @@ public class UserWebController {
         return "users";
     }
 
-    /** Изменение роли пользователя (POST /users/change-role). */
+    /**
+     * Изменение роли пользователя (POST /users/change-role).
+     */
     @PostMapping("/change-role")
     public String changeRole(@RequestParam("userId") Long userId,
                              @RequestParam("role") Role role,
@@ -48,7 +50,9 @@ public class UserWebController {
         return "redirect:/users";
     }
 
-    /** Удаление пользователя (POST /users/delete). */
+    /**
+     * Удаление пользователя (POST /users/delete).
+     */
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("userId") Long userId,
                              RedirectAttributes redirectAttributes) {

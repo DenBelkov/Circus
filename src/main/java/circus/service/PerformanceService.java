@@ -20,7 +20,9 @@ public interface PerformanceService {
      * @return список сущностей {@link Performance}
      */
     List<Performance> findAll();
+
     List<Performance> findAllUpcoming(); // только status = false
+
     /**
      * Сохраняет новое или обновляет существующее выступление.
      *
@@ -30,6 +32,7 @@ public interface PerformanceService {
     Performance save(Performance performance);
 
     List<Performance> findByDateRange(LocalDateTime fromDate, LocalDateTime toDate);
+
     /**
      * Находит выступление по его идентификатору.
      *
@@ -47,4 +50,12 @@ public interface PerformanceService {
      * @param id идентификатор выступления
      */
     void deleteById(Long id);
+
+    List<Performance> findAllSorted();
+
+    List<Performance> findAllUpcomingSorted();
+
+    void updateStatusesForPastPerformances();
+
+//    List<Performance> findByDateTime(LocalDateTime byDate);
 }

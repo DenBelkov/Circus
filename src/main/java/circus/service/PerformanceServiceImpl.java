@@ -4,6 +4,7 @@ import circus.model.Performance;
 import circus.repository.PerformanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,9 @@ import java.util.List;
 @Service
 public class PerformanceServiceImpl implements PerformanceService {
 
-    /** Репозиторий для выполнения операций с таблицей выступлений. */
+    /**
+     * Репозиторий для выполнения операций с таблицей выступлений.
+     */
     private final PerformanceRepository performanceRepository;
 
     /**
@@ -88,4 +91,24 @@ public class PerformanceServiceImpl implements PerformanceService {
     public void deleteById(Long id) {
         performanceRepository.deleteById(id);
     }
+
+    @Override
+    public List<Performance> findAllSorted() {
+        return performanceRepository.findAllByOrderByDateTimeDesc();
+    }
+
+    @Override
+    public List<Performance> findAllUpcomingSorted() {
+        return performanceRepository.findAllUpcomingOrderByDateTimeDesc();
+    }
+
+    @Override
+    @Transactional
+    public void updateStatusesForPastPerformances() {
+        performanceRepository.markPastPerformancesAsDone();
+    }
+//    @Override
+//    public List<Performance> findByDateTime(LocalDateTime byDate){
+//        return performanceRepository.findByDateTime(byDate);
+//    }
 }

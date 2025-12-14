@@ -23,16 +23,20 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    /** Репозиторий доступа к данным пользователей. */
+    /**
+     * Репозиторий доступа к данным пользователей.
+     */
     private final UserRepository userRepository;
 
-    /** Компонент для шифрования (хеширования) паролей. */
+    /**
+     * Компонент для шифрования (хеширования) паролей.
+     */
     private final PasswordEncoder passwordEncoder;
 
     /**
      * Конструктор сервиса пользователей.
      *
-     * @param userRepository репозиторий для операций с пользователями
+     * @param userRepository  репозиторий для операций с пользователями
      * @param passwordEncoder шифратор паролей (например, BCrypt)
      */
     @Autowired

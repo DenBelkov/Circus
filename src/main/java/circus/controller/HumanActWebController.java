@@ -3,10 +3,13 @@ package circus.controller;
 import circus.model.HumanAct;
 import circus.service.EmployeeService;
 import circus.service.HumanActService;
+import circus.service.PerformanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Веб-контроллер для работы с сущностями выступлений.
@@ -20,12 +23,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/humanActs")
 public class HumanActWebController {
 
-    /** Сервис для выполнения операций с объектами {@link HumanAct}. */
+    /**
+     * Сервис для выполнения операций с объектами {@link HumanAct}.
+     */
     @Autowired
     private HumanActService humanActService;
 
+
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private PerformanceService performanceService;
     /**
      * Отображает список всех выступлений и форму добавления нового выступления.
      *
@@ -68,9 +77,10 @@ public class HumanActWebController {
     @GetMapping("/edit/{id}")
     public String editHumanAct(@PathVariable Long id, Model model) {
         model.addAttribute("humanActs", humanActService.findAll());
-        model.addAttribute("humanAct", humanActService.findById(id)); // ВАЖНО
+        model.addAttribute("humanAct", humanActService.findById(id));
         model.addAttribute("editingId", id);
         model.addAttribute("employees", employeeService.findAll());
+        model.addAttribute("performances", performanceService.findAll());
         return "humanActs";
     }
 
@@ -85,16 +95,26 @@ public class HumanActWebController {
     }
 
 
-
     @GetMapping
     public String listHumanActs(Model model,
-                                @RequestParam(required = false) String msg) {
-        model.addAttribute("humanActs", humanActService.findAll());
-        model.addAttribute("humanAct", new HumanAct()); // для модального окна "Add"
+                                @RequestParam(required = false) Long performerId) {
+        List<HumanAct> humanActs = humanActService.findAll();
+
+        if (performerId != null) {
+            humanActs = humanActService.findByMainPerformer(performerId);
+        } else {
+            humanActs = humanActService.findAll();
+        }
+
+
+        model.addAttribute("humanActs", humanActs);
+        model.addAttribute("humanAct", new HumanAct());
         model.addAttribute("editingId", null);
+        model.addAttribute("message", null);
         model.addAttribute("employees", employeeService.findAll());
-        model.addAttribute("message", msg);
-        return "humanActs"; // humanActs.html
+        model.addAttribute("performances", performanceService.findAll());
+        model.addAttribute("performerId", performerId);
+        return "humanActs";
     }
 
 }

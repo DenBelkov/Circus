@@ -12,4 +12,6 @@ public interface HumanActService {
     HumanAct save(HumanAct humanAct);
 
     void deleteById(Long id);
+
+    List<HumanAct> findByMainPerformer(Long performerId);
 }

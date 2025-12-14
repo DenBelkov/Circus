@@ -6,6 +6,7 @@ import circus.model.Employee;
 import circus.service.AnimalActService;
 import circus.service.AnimalService;
 import circus.service.EmployeeService;
+import circus.service.PerformanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +39,9 @@ public class AnimalActWebController {
     private EmployeeService employeeService;
 
     @Autowired
+    private PerformanceService performanceService;
+
+    @Autowired
     private AnimalService animalService;// ← добавить это поле
 
     @GetMapping("/add")
@@ -54,6 +58,7 @@ public class AnimalActWebController {
         model.addAttribute("editingId", id);
         model.addAttribute("employees", employeeService.findAll());
         model.addAttribute("animals", animalService.findAll());
+        model.addAttribute("performances", performanceService.findAll());
         return "animalActs";
     }
 
@@ -66,6 +71,7 @@ public class AnimalActWebController {
         model.addAttribute("editingId", null);
         model.addAttribute("message", msg);
         model.addAttribute("employees", employeeService.findAll());
+        model.addAttribute("performances", performanceService.findAll());
         model.addAttribute("animals", animalService.findAll());// уже есть
         return "animalActs";
     }
@@ -82,12 +88,6 @@ public class AnimalActWebController {
         System.out.println("SAVE animalAct id = " + animalAct.getId());
         return "redirect:/animalActs";
     }
-
-
-
-
-
-
 
 
 }

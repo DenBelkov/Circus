@@ -10,32 +10,61 @@ public class Animal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Кличка. */
+    /**
+     * Кличка.
+     */
     @Column(nullable = false)
     private String name;
 
-    /** Вид (тигр, слон и т.п.). */
+    /**
+     * Вид (тигр, слон и т.п.).
+     */
     @Column(nullable = false)
     private String species;
 
-    /** Возраст в годах. */
+    /**
+     * Возраст в годах.
+     */
     @Column(nullable = false)
     private Integer age;
 
-    public Animal() { }
+    public Animal() {
+    }
 
     // getters/setters
 
-    public Long getId() { return id; }
-    public void setId(Long id){this.id = id;};
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getSpecies() { return species; }
-    public void setSpecies(String species) { this.species = species; }
+    ;
 
-    public Integer getAge() { return age; }
-    public void setAge(Integer age) { this.age = age; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
 }

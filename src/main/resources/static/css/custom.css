@@ -1,0 +1,41 @@
+.btn-primary {
+    background-color: #54A2F0 !important;
+    border-color: #54A2F0 !important;
+}
+
+.btn-primary:hover {
+    background-color: #54A2F0 !important;
+    border-color: #54A2F0 !important;
+}
+
+.btn-secondary {
+    background-color: #F0A354 !important;
+    border-color: #F0A354 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #d88f42 !important;
+    border-color: #d88f42 !important;
+}
+
+/* Полоски в строках */
+.table-striped {
+   --bs-table-striped-bg: cornsilk; !important;;
+}
+
+/* Цвет заголовка */
+.table-dark {
+    --bs-table-bg: #9C1313 !important;
+}
+
+/* Граница ячеек */
+.table {
+    --bs-body-bg: #DCFFF8 !important;
+}
+
+body{
+    background-color: #faeedd;
+    background-image: url('/pattern.png');
+    background-repeat: repeat;
+    background-size: 500px 500px;
+}

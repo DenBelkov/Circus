@@ -25,6 +25,7 @@ public class HumanActServiceImpl implements HumanActService {
         return humanActRepository.findById(id).orElse(null);
     }
 
+
     @Override
     public HumanAct save(HumanAct humanAct) {
         return humanActRepository.save(humanAct);
@@ -33,5 +34,10 @@ public class HumanActServiceImpl implements HumanActService {
     @Override
     public void deleteById(Long id) {
         humanActRepository.deleteById(id);
+    }
+
+    @Override
+    public List<HumanAct> findByMainPerformer(Long performerId) {
+        return humanActRepository.findByMainPerformer_Id(performerId);
     }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.lang.annotation.ElementType;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.annotations.Formula;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,17 +16,39 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "performances")
 public class Performance {
 
-    /** Уникальный идентификатор выступления. */
+    /**
+     * Уникальный идентификатор выступления.
+     */
+
+    @OneToMany(mappedBy = "performance",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "performance",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<HumanAct> humanActs;
+
+    @OneToMany(mappedBy = "performance",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<AnimalAct> animalActs;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    /** Название выступления. */
+    /**
+     * Название выступления.
+     */
     @Column(name = "name", nullable = false)
     private String name;
 
-    /** Дата и время выступления. */
+    /**
+     * Дата и время выступления.
+     */
     @Column(name = "date_time", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dateTime;
@@ -38,7 +62,9 @@ public class Performance {
     @JoinColumn(name = "main_artist_id", nullable = false)
     private Employee mainArtist;
 
-    /** Длительность выступления (например, в минутах). */
+    /**
+     * Длительность выступления (например, в минутах).
+     */
     @Column(name = "duration_minutes", nullable = false)
     private Integer durationMinutes;
 
@@ -113,11 +139,11 @@ public class Performance {
         this.status = status;
     }
 
-    public void setDescription(String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 }

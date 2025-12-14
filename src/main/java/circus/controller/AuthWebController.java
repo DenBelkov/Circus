@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AuthWebController {
 
-    /** Сервис для выполнения операций с пользователями. */
+    /**
+     * Сервис для выполнения операций с пользователями.
+     */
     @Autowired
     private UserService userService;
 
@@ -36,10 +38,10 @@ public class AuthWebController {
     /**
      * Обрабатывает отправку формы регистрации.
      *
-     * @param user объект {@link User}, связанный с данными из формы
+     * @param user  объект {@link User}, связанный с данными из формы
      * @param model объект {@link Model} для передачи ошибок при неудачной регистрации
      * @return перенаправление на страницу входа при успешной регистрации
-     *         или возврат на форму с сообщением об ошибке, если пользователь уже существует
+     * или возврат на форму с сообщением об ошибке, если пользователь уже существует
      */
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {

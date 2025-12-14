@@ -1,5 +1,6 @@
 package circus.controller;
 
+import circus.model.Performance;
 import circus.model.Ticket;
 import circus.service.PerformanceService;
 import circus.service.TicketService;
@@ -29,10 +30,28 @@ public class TicketWebController {
     }
 
     @PostMapping("/save")
-    public String saveTicket(@ModelAttribute Ticket ticket){
+    public String saveTicket(@ModelAttribute("ticket") Ticket ticket,
+                             @RequestParam(required = false, defaultValue = "tickets") String returnTo) {
+        // загружаем performance по id
+        Long perfId = ticket.getPerformance() != null
+                ? ticket.getPerformance().getId()
+                : null;
+
+        if (perfId != null) {
+            Performance performance = performanceService.findById(perfId);
+            ticket.setPerformance(performance);
+        }
+
         ticketService.save(ticket);
-        return "redirect:/tickets";
+
+        // Редирект в зависимости от параметра
+        if ("performances".equals(returnTo)) {
+            return "redirect:/performances";
+        } else {
+            return "redirect:/tickets";
+        }
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteTicket(@PathVariable Long id) {

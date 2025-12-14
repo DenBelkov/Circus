@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/employees")
 public class EmployeeWebController {
 
-    /** Сервис для выполнения операций с объектами {@link Employee}. */
+    /**
+     * Сервис для выполнения операций с объектами {@link Employee}.
+     */
     @Autowired
     private EmployeeService employeeService;
 

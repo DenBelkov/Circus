@@ -1,6 +1,7 @@
 package circus.service;
 
 import circus.model.User;
+
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface UserService {
      *
      * @param user пользователь, которого необходимо зарегистрировать
      * @return {@code true}, если регистрация прошла успешно;
-     *         {@code false}, если пользователь с таким email уже существует
+     * {@code false}, если пользователь с таким email уже существует
      */
     boolean register(User user);
 
@@ -26,7 +27,7 @@ public interface UserService {
      *
      * @param email адрес электронной почты пользователя
      * @return {@code true}, если пользователь с данным email существует;
-     *         {@code false} в противном случае
+     * {@code false} в противном случае
      */
     boolean existsByEmail(String email);
 
